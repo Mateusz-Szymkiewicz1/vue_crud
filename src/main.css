@@ -1,0 +1,53 @@
+:root {
+  --primary: #c9faa5;
+  --primary-hover: #b8e994;
+  --background: #fff;
+  --foreground: #000;
+  --form: #eee;
+  --input: #fff;
+}
+body {
+  font-family: 'Arimo';
+  padding: 30px;
+  background: var(--background);
+  transition: background .4s;
+}
+::selection {
+  background: var(--primary);
+  color: #000;
+}
+h1 {
+  margin: 0;
+  font-size: 38px;
+}
+label, .no_notes{
+  font-size: 21px;
+  color: var(--foreground);
+}
+a{
+  text-decoration: none;
+}
+button{
+  font-family: 'Arimo';
+  cursor: pointer;
+}
+.btn_primary{
+  background: var(--primary-hover);
+  border: 0;
+  font-size: 20px;
+  padding: 10px;
+  width: 85px;
+  outline: none;
+  height: 45px;
+  transition: 0.4s;
+  color: var(--foreground);
+}
+.btn_secondary {
+  background: transparent;
+  border: 0;
+  font-size: 20px;
+  padding: 10px;
+  width: 100px;
+  outline: none;
+  color: var(--foreground);
+}
