@@ -10,7 +10,6 @@ body {
   font-family: 'Arimo';
   padding: 30px;
   background: var(--background);
-  transition: background .4s;
 }
 ::selection {
   background: var(--primary);

@@ -1,12 +1,14 @@
 <template>
   <div class="home">
-    <button class="toggle_theme" @click="theme === 'light' ? theme = 'dark' : theme = 'light'"><i :class="theme === 'light' ? 'fa fa-sun' : 'fa fa-moon'"></i></button>
-    <router-link to="/register" v-if="!logged">
-      <button class="btn_sign_up btn_secondary">Sign Up</button>
-    </router-link>
-    <router-link to="/login" v-if="!logged">
-      <button class="btn_sign_in btn_primary">Sign In</button>
-    </router-link>
+    <div class="buttons_wrapper">
+      <button class="toggle_theme" @click="theme === 'light' ? theme = 'dark' : theme = 'light'"><i :class="theme === 'light' ? 'fa fa-sun' : 'fa fa-moon'"></i></button>
+      <router-link to="/register" v-if="!logged">
+        <button class="btn_sign_up btn_secondary">Sign Up</button>
+      </router-link>
+      <router-link to="/login" v-if="!logged">
+        <button class="btn_sign_in btn_primary">Sign In</button>
+      </router-link>
+    </div>
     <img src="@/assets/logo.png" alt="Logo" class="logo">
     <h1>Notepad--</h1>
     <router-link to="/note/new">
@@ -14,8 +16,9 @@
     </router-link>
     <input type="text" v-model="searched" class="search" placeholder="&#xF002;">
     <button :class="showFav ? 'btn_fav fav_active' : 'btn_fav'" @click="showFav = !showFav">Favourite</button>
+    <Multiselect :max="5" :createOption="true" :appendNewOption="false" :limit="10" mode="tags" :searchable="true" placeholder="Tags" v-model="tags" :options="options" @select="addTags" />
     <div class="notes">
-      <router-link v-for="(note,i) in searchedNotes" :key="i" :to="'/note/'+note.id">
+      <router-link v-for="(note,i) in filteredNotes" :key="i" :to="'/note/'+note.id">
         <div class="note">
           <div class="icons">
             <i class="fa fa-trash" @click.prevent="deleteNote(note.id)"></i>
@@ -27,15 +30,17 @@
         </div>
       </router-link>
     </div>
-    <span class="no_notes" v-if="!searchedNotes.length">There's nothing here...</span>
+    <span class="no_notes" v-if="!filteredNotes.length">There's nothing here...</span>
   </div>
 </template>
 
 <script>
+import Multiselect from '@vueform/multiselect'
 import { useNotesStore } from '@/stores/NotesStore'
 import { ref, watchEffect, watch } from 'vue'
 export default {
   name: 'HomeView',
+  components: { Multiselect },
   setup () {
     const theme = ref('light')
     if (localStorage.getItem('notepad_settings')) {
@@ -53,47 +58,47 @@ export default {
     const deleteNote = (id) => {
       notesStore.value.deleteNote(id)
     }
-    const searchedNotes = ref([])
-    watchEffect(() => {
-      if (searched.value) {
-        if (!showFav.value) {
-          searchedNotes.value = notesStore.value.notes.filter(n => {
-            if (n.text.includes(searched.value) || n.title.includes(searched.value)) {
-              return true
-            }
-            return false
-          })
-        } else {
-          searchedNotes.value = notesStore.value.notes.filter(n => {
-            if ((n.text.includes(searched.value) || n.title.includes(searched.value)) && n.isFav === true) {
-              return true
-            }
-            return false
-          })
-        }
-      } else {
-        if (!showFav.value) {
-          searchedNotes.value = notesStore.value.notes
-        } else {
-          searchedNotes.value = notesStore.value.notes.filter(n => n.isFav === true)
-        }
+    const options = ref(notesStore.value.tags)
+    const tags = ref(null)
+    const addTags = (option) => {
+      if (!options.value.includes(option)) {
+        notesStore.value.tags.push(option)
+        notesStore.value.save()
       }
+    }
+    const filteredNotes = ref(notesStore.value.notes)
+    const filterNotes = () => {
+      let notes = notesStore.value.notes
+      if (searched.value) {
+        notes = notes.filter(n => {
+          if (n.text.toLowerCase().includes(searched.value) || n.title.toLowerCase().includes(searched.value)) {
+            return true
+          }
+          return false
+        })
+      }
+      if (tags.value) {
+        tags.value.forEach(tag => {
+          notes = notes.filter(n => n.tags.includes(tag))
+        })
+      }
+      if (showFav.value) {
+        notes = notes.filter(n => n.isFav === true)
+      }
+      return notes
+    }
+    watch(notesStore.value, () => {
+      filteredNotes.value = notesStore.value.notes
+      filteredNotes.value = filterNotes()
+    })
+    watch(searched, () => {
+      filteredNotes.value = filterNotes()
     })
     watch(showFav, () => {
-      if (showFav.value) {
-        searchedNotes.value = searchedNotes.value.filter(n => n.isFav === true)
-      } else {
-        if (searched.value) {
-          searchedNotes.value = notesStore.value.notes.filter(n => {
-            if (n.text.includes(searched.value) || n.title.includes(searched.value)) {
-              return true
-            }
-            return false
-          })
-        } else {
-          searchedNotes.value = notesStore.value.notes
-        }
-      }
+      filteredNotes.value = filterNotes()
+    })
+    watch(tags, () => {
+      filteredNotes.value = filterNotes()
     })
     watchEffect(() => {
       if (theme.value === 'dark') {
@@ -118,7 +123,7 @@ export default {
         }))
       }
     })
-    return { notesStore, toggleFav, deleteNote, searched, searchedNotes, showFav, logged, theme }
+    return { notesStore, toggleFav, deleteNote, searched, filteredNotes, showFav, logged, theme, tags, options, addTags }
   }
 }
 </script>
@@ -140,7 +145,7 @@ export default {
   }
   .note:hover{
     background: var(--primary-hover);
-    transform: translateY(-5px);
+    transform: translateY(-3px);
   }
   .title{
     font-weight: 600;
@@ -167,7 +172,7 @@ export default {
     margin-left: 20px;
   }
   .fav{
-    color: red;
+    color: #e74c3c;
   }
   .btn_new, .btn_fav, .toggle_theme{
     height: 45px;
@@ -188,6 +193,9 @@ export default {
   .no_notes{
     display: block;
     padding-top: 20px;
+  }
+  .btn_fav{
+    margin-right: 15px;
   }
   .notes{
     clear: both;
@@ -211,20 +219,7 @@ export default {
     height: 40px;
     margin-right: 10px;
   }
-  .btn_sign_in{
-    position: absolute;
-    top: 20px;
-    right: 20px;
-  }
-  .btn_sign_up{
-    position: absolute;
-    top: 20px;
-    right: 120px;
-  }
   .toggle_theme{
-    position: absolute;
-    top: 20px;
-    right: 230px;
     font-size: 26px;
     width: 40px;
     border:0;
@@ -234,5 +229,13 @@ export default {
   }
   .fa-moon{
     color: #ffeaa7;
+  }
+  .buttons_wrapper{
+    float: right;
+    margin-top: -15px;
+    margin-right: -15px;
+  }
+  .buttons_wrapper > a {
+    margin-left: 10px;
   }
 </style>
