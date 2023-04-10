@@ -5,19 +5,24 @@
     <input v-model="newTitle" type="text" placeholder="..." max="100"><br/>
     <label>Text</label><br/>
     <textarea v-model="newText" cols="45" rows="13" max="10000"></textarea><br/>
-    <button class="btn_primary" @click.prevent="editNote">Edit</button>
-    <router-link :to="'/note/'+note.id">
-      <button class="btn_secondary">Cancel</button>
-    </router-link>
+    <Multiselect :max="5" :createOption="true" :appendNewOption="false" :limit="10" mode="tags" :searchable="true" placeholder="Tags" v-model="tags" :options="options" @select="addTags" /><br/><br/>
+    <div class="buttons">
+      <button class="btn_primary" @click.prevent="editNote">Edit</button>
+      <router-link :to="'/note/'+note.id">
+        <button class="btn_secondary">Cancel</button>
+      </router-link>
+    </div>
   </form>
 </template>
 <script>
+import Multiselect from '@vueform/multiselect'
 import { ref } from 'vue'
 import { useNotesStore } from '@/stores/NotesStore'
 import { useRouter } from 'vue-router'
 import { getTheme } from '@/composables/getTheme'
 export default {
   name: 'EditNote',
+  components: { Multiselect },
   props: ['id'],
   setup (props) {
     getTheme()
@@ -39,10 +44,14 @@ export default {
   .note_form{
     background: var(--form);
     margin: auto;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     width: 600px;
     padding: 30px;
     padding-top: 40px;
+    margin-bottom: 40px;
   }
   .h1_title{
     text-align: center;
@@ -58,7 +67,7 @@ export default {
     background: var(--input);
     color: var(--foreground);
   }
-  .note_form input{
+  .note_form input:not(.multiselect *){
     outline: none;
     height: 30px;
     padding-left: 5px;
@@ -66,5 +75,8 @@ export default {
     margin-bottom: 20px;
     background: var(--input);
     color: var(--foreground);
+  }
+  .note_form .multiselect{
+    background: var(--input) !important;
   }
 </style>

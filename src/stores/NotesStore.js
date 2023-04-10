@@ -41,9 +41,15 @@ export const useNotesStore = defineStore('notesStore', {
       })
       this.save()
     },
-    addNote (title, text) {
+    addNote (title, text, tags) {
+      tags = tags.value
+      tags.forEach(tag => {
+        if (!this.tags.includes(tag)) {
+          this.tags.push(tag)
+        }
+      })
       const id = Math.random().toString(36).substring(2, 15) + Math.random().toString(23).substring(2, 5)
-      this.notes.unshift({ id: id, title: title, text: text, isFav: false, tags: ['Test', 'Test2'] })
+      this.notes.unshift({ id: id, title: title, text: text, isFav: false, tags: tags })
       this.save()
     },
     editNote (note, newTitle, newText) {

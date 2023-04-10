@@ -16,7 +16,7 @@
     </router-link>
     <input type="text" v-model="searched" class="search" placeholder="&#xF002;">
     <button :class="showFav ? 'btn_fav fav_active' : 'btn_fav'" @click="showFav = !showFav">Favourite</button>
-    <Multiselect :max="5" :createOption="true" :appendNewOption="false" :limit="10" mode="tags" :searchable="true" placeholder="Tags" v-model="tags" :options="options" @select="addTags" />
+    <Multiselect :max="5" :limit="10" mode="tags" :searchable="true" placeholder="Tags" v-model="tags" :options="options" @select="addTags" />
     <div class="notes">
       <router-link v-for="(note,i) in filteredNotes" :key="i" :to="'/note/'+note.id">
         <div class="note">
@@ -27,6 +27,9 @@
           <span class="title" v-if="note.title">{{note.title.length > 30 ? note.title.slice(0,30)+'...' : note.title}}</span>
           <span class="title" v-else>No title</span>
           <span class="preview">{{note.text.slice(0,100)+'...'}}</span>
+          <div class="tags">
+            <div class="tag" v-for="(tag, i ) in note.tags" :key="i">{{tag}}</div>
+          </div>
         </div>
       </router-link>
     </div>
@@ -132,6 +135,7 @@ export default {
     background: var(--primary);
     color: #005000;
     padding: 25px;
+    padding-bottom: 55px;
     margin: 10px;
     margin-left: 0;
     float: left;
@@ -237,5 +241,18 @@ export default {
   }
   .buttons_wrapper > a {
     margin-left: 10px;
+  }
+  .tag{
+    background: #005000;
+    color: #fff;
+    padding: 8px;
+    font-size: 15px;
+    float: left;
+    margin-right: 10px;
+  }
+  .tags{
+    position: absolute;
+    bottom: 10px;
+    left: 25px;
   }
 </style>

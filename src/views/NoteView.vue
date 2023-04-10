@@ -4,6 +4,7 @@
     <div class="content">
       <div class="tags">
         <span>Tags:</span>
+        <span v-if="!note.tags.length && !note.isFav">None</span>
         <div class="tag" v-for="(tag,i) in note.tags" :key="i">{{tag}}</div>
         <div class="heart tag" v-if="note.isFav"><i class="fa fa-heart"></i></div>
       </div>
@@ -59,6 +60,8 @@ export default {
   }
   pre{
     margin-top: 0;
+    word-break: break-word;
+    white-space: pre-wrap;
   }
   .tag{
     background: var(--primary);
