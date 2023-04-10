@@ -16,7 +16,11 @@
     </router-link>
     <input type="text" v-model="searched" class="search" placeholder="&#xF002;">
     <button :class="showFav ? 'btn_fav fav_active' : 'btn_fav'" @click="showFav = !showFav">Favourite</button>
-    <Multiselect :max="5" :limit="10" mode="tags" :searchable="true" placeholder="Tags" v-model="tags" :options="options" @select="addTags" />
+    <Multiselect :max="5" :limit="10" mode="tags" :searchable="true" placeholder="Tags" v-model="tags" :options="options" @select="addTags">
+       <template v-slot:option="{ option }">
+         <span class="option_value">{{ option.value }}</span><span class="tag_delete" @click.stop="deleteTag"><i class="fa fa-square-minus"></i></span>
+       </template>
+    </Multiselect>
     <div class="notes">
       <router-link v-for="(note,i) in filteredNotes" :key="i" :to="'/note/'+note.id">
         <div class="note">
@@ -126,7 +130,11 @@ export default {
         }))
       }
     })
-    return { notesStore, toggleFav, deleteNote, searched, filteredNotes, showFav, logged, theme, tags, options, addTags }
+    const deleteTag = (e) => {
+      notesStore.value.deleteTag(e.target.parentElement.parentElement.querySelector('.option_value').innerText)
+      options.value = notesStore.value.tags
+    }
+    return { notesStore, toggleFav, deleteNote, searched, filteredNotes, showFav, logged, theme, tags, options, addTags, deleteTag }
   }
 }
 </script>
@@ -254,5 +262,10 @@ export default {
     position: absolute;
     bottom: 10px;
     left: 25px;
+  }
+  .tag_delete{
+    color: #e74c3c;
+    margin-left: auto;
+    font-size: 15px;
   }
 </style>

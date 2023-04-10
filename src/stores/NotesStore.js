@@ -52,9 +52,24 @@ export const useNotesStore = defineStore('notesStore', {
       this.notes.unshift({ id: id, title: title, text: text, isFav: false, tags: tags })
       this.save()
     },
-    editNote (note, newTitle, newText) {
+    editNote (note, newTitle, newText, newTags) {
+      newTags = newTags.value
+      newTags.forEach(tag => {
+        if (!this.tags.includes(tag)) {
+          this.tags.push(tag)
+        }
+      })
       this.notes = this.notes.filter(n => n.id !== note.id)
-      this.notes.unshift({ id: note.id, title: newTitle, text: newText, isFav: note.isFav, tags: note.tags })
+      this.notes.unshift({ id: note.id, title: newTitle, text: newText, isFav: note.isFav, tags: newTags })
+      this.save()
+    },
+    deleteTag (deletedTag) {
+      this.tags = this.tags.filter(tag => tag !== deletedTag)
+      this.notes.forEach(note => {
+        if (note.tags.length) {
+          note.tags = note.tags.filter(tag => tag !== deletedTag)
+        }
+      })
       this.save()
     }
   }
