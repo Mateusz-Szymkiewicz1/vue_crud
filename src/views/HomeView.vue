@@ -28,7 +28,7 @@
             <i class="fa fa-trash" @click.prevent="deleteNote(note.id)"></i>
             <i :class="note.isFav ? 'fa fa-heart fav' : 'fa fa-heart'" @click.prevent="toggleFav(note.id)"></i>
           </div>
-          <span class="title" v-if="note.title">{{note.title.length > 30 ? note.title.slice(0,30)+'...' : note.title}}</span>
+          <span class="title" v-if="note.title">{{note.title.length > 20 ? note.title.slice(0,20)+' - '+note.date : note.title+' - '+note.date}}</span>
           <span class="title" v-else>No title</span>
           <span class="preview">{{note.text.slice(0,100)+'...'}}</span>
           <div class="tags">
@@ -163,7 +163,7 @@ export default {
     font-weight: 600;
     font-size: 26px;
     display: block;
-    padding-right: 85px;
+    padding-right: 90px;
   }
   .preview{
     display: block;

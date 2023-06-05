@@ -48,8 +48,18 @@ export const useNotesStore = defineStore('notesStore', {
           this.tags.push(tag)
         }
       })
+      const dateObj = new Date()
+      let day = dateObj.getDate()
+      let month = dateObj.getMonth() + 1
+      if (day < 10) {
+        day = '0' + day
+      }
+      if (month < 10) {
+        month = '0' + month
+      }
+      const date = day + '-' + month + '-' + dateObj.getFullYear()
       const id = Math.random().toString(36).substring(2, 15) + Math.random().toString(23).substring(2, 5)
-      this.notes.unshift({ id: id, title: title, text: text, isFav: false, tags: tags })
+      this.notes.unshift({ id: id, title: title, text: text, isFav: false, tags: tags, date: date })
       this.save()
     },
     editNote (note, newTitle, newText, newTags) {
@@ -60,7 +70,7 @@ export const useNotesStore = defineStore('notesStore', {
         }
       })
       this.notes = this.notes.filter(n => n.id !== note.id)
-      this.notes.unshift({ id: note.id, title: newTitle, text: newText, isFav: note.isFav, tags: newTags })
+      this.notes.unshift({ id: note.id, title: newTitle, text: newText, isFav: note.isFav, tags: newTags, date: note.date })
       this.save()
     },
     deleteTag (deletedTag) {

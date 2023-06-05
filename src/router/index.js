@@ -5,6 +5,8 @@ import NoteView from '../views/NoteView.vue'
 import EditNoteView from '../views/EditNoteView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
+import TOSView from '../views/TOSView.vue'
+import ErrorView from '../views/ErrorView.vue'
 
 const routes = [
   {
@@ -38,6 +40,16 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: RegisterView
+  },
+  {
+    path: '/tos',
+    name: 'TOS',
+    component: TOSView
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'Error',
+    component: ErrorView
   }
 ]
 

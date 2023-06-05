@@ -1,5 +1,7 @@
 <template>
-  <div class="wrapper">
+  <h1 class="h1_404" v-if="!note">Nie znaleziono notki o podanym id ;/<p>404</p></h1>
+  <router-link v-if="!note" to="/"><i class="fa fa-arrow-left"></i></router-link>
+  <div class="wrapper" v-if="note">
     <h1 class="h1_title">Note - {{note.title ? note.title : 'No title'}}</h1>
     <div class="content">
       <div class="tags">
@@ -34,6 +36,26 @@ export default {
 }
 </script>
 <style scoped>
+  .h1_404{
+    text-align: center;
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .fa-arrow-left{
+    font-size: 32px;
+    position: absolute;
+    top: 25px;
+    right: 30px;
+    color: var(--primary-hover);
+  }
+  p{
+    font-size: 100px;
+    margin: 10px;
+    color: var(--primary-hover);
+  }
   .content{
     background: var(--form);
     min-width: 600px;
@@ -64,7 +86,7 @@ export default {
     white-space: pre-wrap;
   }
   .tag{
-    background: var(--primary);
+    background: var(--primary-hover);
     color: #fff;
     float: left;
     padding: 10px;

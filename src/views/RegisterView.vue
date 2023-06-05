@@ -9,7 +9,7 @@
     <input type="password" placeholder="&#xF084;"><br/>
     <label>Repeat password</label><br/>
     <input type="password"><br/>
-    <label>I agree to Notepad's <a href="#">Terms of usage</a>&nbsp;</label><input type="checkbox"><br/>
+    <label>I agree to Notepad's <router-link to="/tos">Terms of service</router-link>&nbsp;</label><input type="checkbox"><br/>
     <router-link to="/">
       <button class="btn_secondary">Back</button>
     </router-link>
