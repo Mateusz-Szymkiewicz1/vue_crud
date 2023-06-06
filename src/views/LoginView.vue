@@ -2,9 +2,9 @@
   <form class="login_form">
     <h1>Log in</h1>
     <label>Username</label><br/>
-    <input type="text" placeholder="&#xF007;"><br/>
+    <input type="text" placeholder="&#xF007;" name="username"><br/>
     <label>Password</label><br/>
-    <input type="password" placeholder="&#xF084;"><br/>
+    <input type="password" placeholder="&#xF084;" name="pass"><br/>
     <router-link to="/">
       <button class="btn_secondary">Back</button>
     </router-link>

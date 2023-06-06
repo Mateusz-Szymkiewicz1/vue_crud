@@ -1,10 +1,11 @@
 <template>
-  <h1 class="h1_404" v-if="!note">Nie znaleziono notki o podanym id ;/<p>404</p></h1>
+  <h1 class="h1_404" v-if="!note">Couldn't find a note with this id ;/<p>404</p></h1>
   <router-link v-if="!note" to="/"><i class="fa fa-arrow-left"></i></router-link>
   <div class="wrapper" v-if="note">
     <h1 class="h1_title">Note - {{note.title ? note.title : 'No title'}}</h1>
     <div class="content">
       <div class="tags">
+        <span>{{note.date}}</span>
         <span>Tags:</span>
         <span v-if="!note.tags.length && !note.isFav">None</span>
         <div class="tag" v-for="(tag,i) in note.tags" :key="i">{{tag}}</div>

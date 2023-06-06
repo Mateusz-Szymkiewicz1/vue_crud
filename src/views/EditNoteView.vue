@@ -1,5 +1,5 @@
 <template>
-  <h1 class="h1_404" v-if="!note">Nie znaleziono notki o podanym id ;/<p>404</p></h1>
+  <h1 class="h1_404" v-if="!note">Couldn't find a note with this id ;/<p>404</p></h1>
   <router-link v-if="!note" to="/"><i class="fa fa-arrow-left"></i></router-link>
   <div class="wrapper" v-if="note">
     <h1 class="h1_title">Edit note - {{note.title}}</h1>
@@ -67,7 +67,7 @@ export default {
     right: 30px;
     color: var(--primary-hover);
   }
-  p{
+  .h1_404 p{
     font-size: 100px;
     margin: 10px;
     color: var(--primary-hover);

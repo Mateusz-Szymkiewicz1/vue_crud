@@ -1,6 +1,6 @@
 <template>
   <router-link to="/"><i class="fa fa-arrow-left"></i></router-link>
-  <h1>Oj... Nie znaleziono stronki ;/<p>404</p></h1>
+  <h1>Oh... Page not found ;/<p>404</p></h1>
 </template>
 <script>
 import { getTheme } from '@/composables/getTheme'

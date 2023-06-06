@@ -14,7 +14,7 @@
     <router-link to="/note/new">
       <button class="btn_new">New</button>
     </router-link>
-    <input type="text" v-model="searched" class="search" placeholder="&#xF002;">
+    <input type="text" name="search" v-model="searched" class="search" placeholder="&#xF002;">
     <button :class="showFav ? 'btn_fav fav_active' : 'btn_fav'" @click="showFav = !showFav">Favourite</button>
     <Multiselect :max="5" :limit="10" mode="tags" :searchable="true" placeholder="Tags" v-model="tags" :options="options" @select="addTags">
        <template v-slot:option="{ option }">
@@ -43,6 +43,7 @@
 
 <script>
 import Multiselect from '@vueform/multiselect'
+import { decision } from '@/composables/decision.js'
 import { useNotesStore } from '@/stores/NotesStore'
 import { ref, watchEffect, watch } from 'vue'
 export default {
@@ -62,8 +63,18 @@ export default {
     const toggleFav = (id) => {
       notesStore.value.toggleFav(id)
     }
-    const deleteNote = (id) => {
-      notesStore.value.deleteNote(id)
+    const deleteNote = async (id) => {
+      if (!document.querySelector('.decision')) {
+        await decision().then(function () {
+          notesStore.value.deleteNote(id)
+          document.querySelector('.decision').remove()
+        }, function () {
+          document.querySelector('.decision').style.animation = 'slideOutUp 0.5s ease'
+          setTimeout(function () {
+            document.querySelector('.decision').remove()
+          }, 500)
+        })
+      }
     }
     const options = ref(notesStore.value.tags)
     const tags = ref(null)
