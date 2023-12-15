@@ -145,6 +145,14 @@ export default {
       notesStore.value.deleteTag(e.target.parentElement.parentElement.querySelector('.option_value').innerText)
       options.value = notesStore.value.tags
     }
+    fetch('http://localhost:3000/login', {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: 'POST',
+      body: JSON.stringify({username: 'admin', password: 'admin'})
+    })
     return { notesStore, toggleFav, deleteNote, searched, filteredNotes, showFav, logged, theme, tags, options, addTags, deleteTag }
   }
 }
